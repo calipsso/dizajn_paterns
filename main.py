@@ -1,25 +1,34 @@
-class Singleton:
-    _instance = None  # instancia je objekt
+class Dokument:
+    def create(self):
+        raise NotImplementedError("Metoda create() musi byt prepisana")
+class PDFDokument(Dokument):
+    def create(self):
+        return "Vytvaram PDF dokument"
+class WordDokument(Dokument):
+    def create(self):
+        return "Vytvaram Word dokument"
 
-    def __init__(self):
-        if Singleton._instance is not None:
-            raise Exception("tato trieda uz bola instancovana")
+class TXTDocument(Dokument):
+    def create(self):
+        return ("Vytvratam TXT")
+
+class Factory:
+    def create_dokument(self, type):
+        if type == "PDF":
+            return PDFDokument()
+        elif type == "word":
+            return WordDokument()
+        elif type == "txt":
+            return TXTDocument()
         else:
-            self.meno = "patrik"
-            Singleton._instance = self
+            raise ValueError("Neznamy typ")
 
-    @staticmethod
-    def getInstance():
-        if Singleton._instance is None:
-            Singleton()
-        return Singleton._instance
+factory = Factory()
+pdf = factory.create_dokument("PDF")
+print(pdf.create())
 
-s1 = Singleton.getInstance()
-print(s1.meno)
+word = factory.create_dokument("word")
+print(word.create())
 
-s2 = Singleton.getInstance()
-s1.meno = "Milan"
-print(s2.meno)
-
-s3 = Singleton()
-print(s3.meno)
+txt = factory.create_dokument("txt")
+print(txt.create())
